@@ -36,7 +36,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe("Typing animation works as intended", () => {
+describe("typing animation behaves as intended", () => {
   it("initializes with the cursor", () => {
     const { OuterSpan } = renderComponent();
 

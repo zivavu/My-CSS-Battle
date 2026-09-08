@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Terminal, Menu, X, ExternalLink } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
+import { AnimatedThemeToggler } from "@/components/ui/AnimatedThemeToggle/animated-theme-toggler";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -18,7 +18,8 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const isActive = (to: string) =>
-    location.pathname === to || (to !== "/" && location.pathname.startsWith(to));
+    location.pathname === to ||
+    (to !== "/" && location.pathname.startsWith(to));
 
   return (
     <header
@@ -84,7 +85,11 @@ export default function Navbar() {
             aria-expanded={menuOpen}
             aria-controls="mobile-nav-menu"
           >
-            {menuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+            {menuOpen ? (
+              <X className="w-4 h-4" />
+            ) : (
+              <Menu className="w-4 h-4" />
+            )}
           </button>
         </div>
       </nav>
@@ -102,36 +107,36 @@ export default function Navbar() {
               transition={{ duration: 0.16, ease: "easeInOut" }}
               className="md:hidden overflow-hidden border-t border-border bg-background/95 backdrop-blur-md"
             >
-            <div className="max-w-6xl mx-auto px-4 py-2 flex flex-col">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
+              <div className="max-w-6xl mx-auto px-4 py-2 flex flex-col">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.to}
+                    to={link.to}
+                    onClick={() => setMenuOpen(false)}
+                    className={cn(
+                      "px-3 py-3.5 text-sm font-mono transition-colors rounded-sm",
+                      isActive(link.to)
+                        ? "text-primary bg-primary/10"
+                        : "text-muted-foreground hover:text-(--nav-hover-text) hover:bg-(--nav-hover-bg)",
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+                <a
+                  href="https://github.com/AbhishekBalija/cssbattle-tracker-extension"
+                  target="_blank"
+                  rel="noreferrer"
                   onClick={() => setMenuOpen(false)}
-                  className={cn(
-                    "px-3 py-3.5 text-sm font-mono transition-colors rounded-sm",
-                    isActive(link.to)
-                      ? "text-primary bg-primary/10"
-                      : "text-muted-foreground hover:text-(--nav-hover-text) hover:bg-(--nav-hover-bg)",
-                  )}
+                  className="px-3 py-3.5 text-sm font-mono transition-colors rounded-sm text-primary bg-primary/10 hover:bg-primary/20 inline-flex items-center gap-1.5"
                 >
-                  {link.label}
-                </Link>
-              ))}
-              <a
-                href="https://github.com/AbhishekBalija/cssbattle-tracker-extension"
-                target="_blank"
-                rel="noreferrer"
-                onClick={() => setMenuOpen(false)}
-                className="px-3 py-3.5 text-sm font-mono transition-colors rounded-sm text-primary bg-primary/10 hover:bg-primary/20 inline-flex items-center gap-1.5"
-              >
-                Get extension
-                <ExternalLink className="w-3 h-3" />
-              </a>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                  Get extension
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </header>
   );
