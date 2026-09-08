@@ -97,7 +97,7 @@ function TypingAnimationContent({
 
   const wordsToAnimate = useMemo(
     () => words ?? (children ? [children] : []),
-    [words, children]
+    [words, children],
   );
   const hasMultipleWords = wordsToAnimate.length > 1;
 
@@ -126,7 +126,7 @@ function TypingAnimationContent({
           case "typing":
             if (currentCharIndex < graphemes.length) {
               setDisplayedText(
-                graphemes.slice(0, currentCharIndex + 1).join("")
+                graphemes.slice(0, currentCharIndex + 1).join(""),
               );
               setCurrentCharIndex(currentCharIndex + 1);
             } else {
@@ -147,7 +147,7 @@ function TypingAnimationContent({
           case "deleting":
             if (currentCharIndex > 0) {
               setDisplayedText(
-                graphemes.slice(0, currentCharIndex - 1).join("")
+                graphemes.slice(0, currentCharIndex - 1).join(""),
               );
               setCurrentCharIndex(currentCharIndex - 1);
             } else {
@@ -181,7 +181,7 @@ function TypingAnimationContent({
   ]);
 
   const currentWordGraphemes = Array.from(
-    wordsToAnimate[currentWordIndex] || ""
+    wordsToAnimate[currentWordIndex] || "",
   );
   const isComplete =
     !loop &&
@@ -192,7 +192,9 @@ function TypingAnimationContent({
   const shouldShowCursor =
     showCursor &&
     !isComplete &&
-    (hasMultipleWords || loop || currentCharIndex < currentWordGraphemes.length);
+    (hasMultipleWords ||
+      loop ||
+      currentCharIndex < currentWordGraphemes.length);
 
   const getCursorChar = () => {
     switch (cursorStyle) {
@@ -212,9 +214,10 @@ function TypingAnimationContent({
       className={cn(
         "leading-20 tracking-[-0.02em]",
         Component === "span" && "inline-block",
-        className
+        className,
       )}
       {...props}
+      aria-label="animated-text"
     >
       {displayedText}
       {shouldShowCursor && (

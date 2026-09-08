@@ -1,6 +1,6 @@
 import VoiceLine from "./VoiceLine";
 import { Highlighter } from "@/components/ui/highlighter";
-import { TypingAnimation } from "@/components/ui/typing-animation";
+import { TypingAnimation } from "@/components/ui/TypingAnimation/typing-animation";
 
 const Hero = () => {
   return (
