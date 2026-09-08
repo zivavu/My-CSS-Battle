@@ -1,4 +1,11 @@
 import {
+  motion,
+  useInView,
+  type DOMMotionComponents,
+  type HTMLMotionProps,
+  type MotionProps,
+} from "motion/react";
+import {
   useEffect,
   useMemo,
   useRef,
@@ -7,13 +14,6 @@ import {
   type RefAttributes,
   type RefObject,
 } from "react";
-import {
-  motion,
-  useInView,
-  type DOMMotionComponents,
-  type HTMLMotionProps,
-  type MotionProps,
-} from "motion/react";
 
 import { cn } from "@/lib/utils";
 
@@ -42,7 +42,7 @@ type TypingAnimationMotionComponent = ComponentType<
 
 interface TypingAnimationProps extends Omit<MotionProps, "children"> {
   children?: string;
-  words: string[];
+  words?: string[];
   className?: string;
   duration?: number;
   typeSpeed?: number;
@@ -217,9 +217,9 @@ function TypingAnimationContent({
         className,
       )}
       {...props}
-      aria-label="animated-text-container"
+      data-testid="animated-text-container"
     >
-      <span aria-label="animated-text">{displayedText}</span>
+      <span data-testid="animated-text">{displayedText}</span>
       {shouldShowCursor && (
         <span
           className={cn("inline-block", blinkCursor && "animate-blink-cursor")}

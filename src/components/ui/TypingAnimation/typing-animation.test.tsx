@@ -1,36 +1,51 @@
+import { act, render, screen } from "@testing-library/react";
 import { TypingAnimation } from "./typing-animation";
-import { act, render, screen, waitFor } from "@testing-library/react";
 
 const words = ["hello", "bye", "cya", "later"];
+const typeSpeed = 20;
+// The component derives its delete speed from the type speed, so this is the
+// shortest interval any timer in the animation can use.
+const tickMs = typeSpeed / 2;
 
-interface WaitForElementTextContentArgs {
-  el: HTMLElement;
-  word: string;
+function renderComponent() {
+  render(
+    <TypingAnimation words={words} typeSpeed={typeSpeed} startOnView={false} />,
+  );
+
+  return {
+    OuterSpan: screen.getByTestId("animated-text-container"),
+    TextSpan: screen.getByTestId("animated-text"),
+  };
 }
 
-async function waitForElementsTextContent({
-  el,
-  word,
-}: WaitForElementTextContentArgs) {
-  await waitFor(
-    () => {
-      expect(el.textContent).toEqual(word);
-    },
-    { timeout: 5000 },
+async function advanceBy(ms: number) {
+  for (let elapsed = 0; elapsed < ms; elapsed += tickMs) {
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(tickMs);
+    });
+  }
+}
+
+async function advanceUntilText(
+  el: HTMLElement,
+  text: string,
+  budget = 20_000,
+) {
+  for (let elapsed = 0; elapsed < budget; elapsed += tickMs) {
+    if (el.textContent === text) return;
+    await advanceBy(tickMs);
+  }
+
+  throw new Error(
+    `Text never became ${JSON.stringify(
+      text,
+    )} within ${budget}ms (last value: ${JSON.stringify(el.textContent)})`,
   );
 }
 
-function renderComponent() {
-  render(<TypingAnimation words={words} typeSpeed={20} startOnView={false} />);
-  const OuterSpan = screen.getByRole("generic", {
-    name: "animated-text-container",
-  });
-  const TextSpan = screen.getByRole("generic", {
-    name: "animated-text",
-  });
-
-  return { OuterSpan, TextSpan };
-}
+beforeEach(() => {
+  vi.useFakeTimers();
+});
 
 afterEach(() => {
   vi.useRealTimers();
@@ -46,59 +61,54 @@ describe("typing animation", () => {
 
   it("initializes with empty text", () => {
     const { TextSpan } = renderComponent();
+
     expect(TextSpan.textContent).toEqual("");
   });
 
-  it("types text", () => {
-    vi.useFakeTimers();
+  it("types one character per interval", async () => {
+    const { TextSpan } = renderComponent();
 
-    const { OuterSpan } = renderComponent();
+    await advanceBy(typeSpeed);
+    expect(TextSpan.textContent).toEqual("h");
 
-    expect(OuterSpan).toHaveTextContent("|");
-
-    act(() => {
-      vi.advanceTimersByTime(100);
-    });
-
-    expect(OuterSpan.textContent).toContain("h");
+    await advanceBy(typeSpeed * 2);
+    expect(TextSpan.textContent).toEqual("hel");
   });
 
   it("prints the whole word, deletes it, and prints next one", async () => {
     const { TextSpan } = renderComponent();
 
-    await waitForElementsTextContent({ el: TextSpan, word: words[0] });
-    await waitForElementsTextContent({ el: TextSpan, word: "" });
-    await waitForElementsTextContent({ el: TextSpan, word: words[1] });
+    await advanceUntilText(TextSpan, words[0]);
+    await advanceUntilText(TextSpan, "");
+    await advanceUntilText(TextSpan, words[1]);
   });
 
   it("stays on the last word after ending the cycle", async () => {
-    vi.useFakeTimers();
-
     const { TextSpan } = renderComponent();
     const lastWord = words.at(-1)!;
 
-    let reachedLastWord = false;
+    await advanceUntilText(TextSpan, lastWord);
 
-    for (let elapsed = 0; elapsed < 20_000; elapsed += 20) {
-      await act(async () => {
-        await vi.advanceTimersByTimeAsync(20);
-      });
+    await advanceBy(5_000);
 
-      if (TextSpan.textContent === lastWord) {
-        reachedLastWord = true;
-        break;
-      }
-    }
+    expect(TextSpan.textContent).toEqual(lastWord);
+  });
 
-    expect(reachedLastWord).toBe(true);
-    expect(TextSpan).toHaveTextContent(lastWord);
+  it("hides the cursor once the last word is complete", async () => {
+    const { TextSpan, OuterSpan } = renderComponent();
 
-    for (let elapsed = 0; elapsed < 2_000; elapsed += 20) {
-      await act(async () => {
-        await vi.advanceTimersByTimeAsync(20);
-      });
-    }
+    await advanceUntilText(TextSpan, words.at(-1)!);
+    await advanceBy(typeSpeed * 2);
 
-    expect(TextSpan).toHaveTextContent(lastWord);
+    expect(OuterSpan).not.toHaveTextContent("|");
+  });
+
+  it("does not start while out of view when startOnView is set", async () => {
+    render(<TypingAnimation words={words} typeSpeed={typeSpeed} startOnView />);
+    const TextSpan = screen.getByTestId("animated-text");
+
+    await advanceBy(1_000);
+
+    expect(TextSpan.textContent).toEqual("");
   });
 });
