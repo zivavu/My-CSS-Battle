@@ -42,7 +42,7 @@ type TypingAnimationMotionComponent = ComponentType<
 
 interface TypingAnimationProps extends Omit<MotionProps, "children"> {
   children?: string;
-  words?: string[];
+  words: string[];
   className?: string;
   duration?: number;
   typeSpeed?: number;
@@ -217,9 +217,9 @@ function TypingAnimationContent({
         className,
       )}
       {...props}
-      aria-label="animated-text"
+      aria-label="animated-text-container"
     >
-      {displayedText}
+      <span aria-label="animated-text">{displayedText}</span>
       {shouldShowCursor && (
         <span
           className={cn("inline-block", blinkCursor && "animate-blink-cursor")}
