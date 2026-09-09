@@ -37,7 +37,7 @@ export function ShineBorder({
       }
       className={cn(
         "pointer-events-none absolute inset-0 size-full rounded-[inherit] will-change-[background-position]",
-        className
+        className,
       )}
       {...props}
     />

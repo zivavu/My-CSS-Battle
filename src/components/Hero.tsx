@@ -9,7 +9,7 @@ const Hero = () => {
         CSSBattle Daily — CSS golf solutions and daily targets
       </h1>
       <TypingAnimation
-        words={["Hi guys!!!", "Abhi here 👀", "Nice to welcome you there"]}
+        words={["Hi guys!!!", "Abhi here 👀"]}
         startOnView
         className="font-mono text-lg sm:text-xl text-foreground/90"
       />
