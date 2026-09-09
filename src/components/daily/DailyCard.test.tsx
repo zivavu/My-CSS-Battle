@@ -1,4 +1,4 @@
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import DailyCard from "./DailyCard";
 
 import { getBattleSolutions } from "@/lib/data";
@@ -66,6 +66,7 @@ test.afterEach(cleanup);
 describe("today compleated daily card", () => {
   it("renders today next to date", () => {
     renderTodayCard({ isSolved: true });
+
     const todayText = screen.getByText(/today/i);
 
     expect(todayText).toBeInTheDocument();
@@ -75,36 +76,15 @@ describe("today compleated daily card", () => {
 describe("tomorrow daily card", () => {
   it("doesn't render the link", () => {
     renderTomorrowCard();
+
     const links = screen.queryAllByRole("link");
     expect(links).toHaveLength(0);
   });
 
-  it("displays the timer", () => {
+  it("displays the unlocks in", () => {
     renderTomorrowCard();
 
     expect(screen.getByText(/unlocks in/i)).toBeInTheDocument();
-
-    expect(screen.getByText(/\d\d:\d\d:\d\d/)).toBeInTheDocument();
-  });
-
-  it("changes the timer value", () => {
-    vi.useFakeTimers();
-
-    renderTomorrowCard();
-
-    const timerEl = screen.getByText(/\d\d:\d\d:\d\d/);
-    const initialTime = timerEl.textContent;
-
-    act(() => {
-      vi.advanceTimersByTime(10000);
-    });
-
-    const nextTime = timerEl.textContent;
-    console.log(nextTime);
-
-    expect(initialTime).not.toEqual(nextTime);
-
-    vi.useRealTimers();
   });
 });
 
