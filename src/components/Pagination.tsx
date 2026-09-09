@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-interface PaginationProps {
+export interface PaginationProps {
   basePath: string;
   currentPage: number;
   totalPages: number;

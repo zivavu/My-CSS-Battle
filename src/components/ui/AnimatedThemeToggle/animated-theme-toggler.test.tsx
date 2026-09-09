@@ -19,7 +19,7 @@ beforeEach(() => {
     finished: Promise.resolve(),
     cancel: vi.fn(),
     play: vi.fn(),
-  })) as any;
+  })) as unknown as any;
 });
 
 function renderComponent() {

@@ -19,7 +19,9 @@ function renderTodayCard({ isSolved = true }) {
       wrapper: BrowserRouter,
     });
   } else {
-    render(<DailyCard state={"today"} solution={{ ...solution, score: 0 }} />);
+    render(<DailyCard state={"today"} solution={{ ...solution, score: 0 }} />, {
+      wrapper: BrowserRouter,
+    });
   }
 
   return { solution };
