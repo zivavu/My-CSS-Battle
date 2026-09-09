@@ -58,6 +58,8 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  Reflect.deleteProperty(document, "startViewTransition");
+  Reflect.deleteProperty(Element.prototype, "animate");
   document.documentElement.className = "";
   document.documentElement.removeAttribute("style");
   delete document.documentElement.dataset.magicuiThemeVt;

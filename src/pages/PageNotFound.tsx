@@ -4,7 +4,7 @@ import SEO from "@/components/SEO";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { DotPattern } from "@/components/ui/dot-pattern";
 import { ShineBorder } from "@/components/ui/shine-border";
-import { TypingAnimation } from "@/components/ui/TypingAnimation/typing-animation";
+import { TypingAnimation } from "@/components/ui/typing-animation";
 
 export default function PageNotFound() {
   return (

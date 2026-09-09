@@ -33,7 +33,12 @@ interface DailyCardProps {
   layout?: "strip" | "grid";
 }
 
-export default function DailyCard({ solution, state, date, layout = "strip" }: DailyCardProps) {
+export default function DailyCard({
+  solution,
+  state,
+  date,
+  layout = "strip",
+}: DailyCardProps) {
   const isToday = state === "today";
   const isTomorrow = state === "tomorrow";
   const isFarPast = state === "far-past";
@@ -51,7 +56,8 @@ export default function DailyCard({ solution, state, date, layout = "strip" }: D
       : "opacity-100";
 
   // Shared layout constants so every variant renders at the same size.
-  const sizeClasses = layout === "grid" ? "w-full" : "w-[220px] sm:w-[260px] shrink-0";
+  const sizeClasses =
+    layout === "grid" ? "w-full" : "w-[220px] sm:w-[260px] shrink-0";
   const headerClasses = "px-2 h-8 flex items-center justify-center";
   const footerClasses = "px-2 h-12 flex items-center justify-center";
 
@@ -188,9 +194,7 @@ export default function DailyCard({ solution, state, date, layout = "strip" }: D
           <div className="aspect-4/3 bg-muted/5" />
           <div className={`${footerClasses} flex-col gap-0.5`}>
             <span className="font-mono text-[11px] text-muted-foreground/50">
-              {isYesterdayMissed
-                ? "still staring at it?"
-                : "not solved yet"}
+              {isYesterdayMissed ? "still staring at it?" : "not solved yet"}
             </span>
             {isYesterdayMissed && (
               <span className="font-mono text-[11px] text-warn/80">
@@ -225,48 +229,50 @@ export default function DailyCard({ solution, state, date, layout = "strip" }: D
           />
         )}
         <div className="rounded-lg overflow-hidden">
-        {/* Badge header */}
-        <div className={headerClasses}>
-          <span
-            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full ${
-              isToday ? "bg-primary/15" : "bg-primary/10"
-            }`}
-          >
-            <Check className="w-2.5 h-2.5 text-primary" />
-            <span className="font-mono text-[11px] sm:text-xs font-medium text-foreground">
-              {dateLabel}
-            </span>
-            {isToday && (
-              <span className="font-mono text-[11px] sm:text-xs font-semibold text-primary">
-                (TODAY)
+          {/* Badge header */}
+          <div className={headerClasses}>
+            <span
+              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full ${
+                isToday ? "bg-primary/15" : "bg-primary/10"
+              }`}
+            >
+              <Check className="w-2.5 h-2.5 text-primary" />
+              <span className="font-mono text-[11px] sm:text-xs font-medium text-foreground">
+                {dateLabel}
               </span>
-            )}
-          </span>
-        </div>
-        {/* Target image */}
-        <div className="aspect-4/3 overflow-hidden border-y border-border/40">
-          <TargetImage
-            src={getSolutionImageUrl(solution)}
-            colors={solution.colors}
-            alt={solution.name}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.06]"
-          />
-        </div>
-        {/* Footer - always show for solved cards */}
-        <div className={`${footerClasses} flex-col items-start gap-0.5 py-1.5`}>
-          <div className="flex items-center justify-between w-full">
-            <span className="font-mono text-[11px] text-muted-foreground transition-colors duration-300 group-hover:text-foreground/80">
-              Your score
+              {isToday && (
+                <span className="font-mono text-[11px] sm:text-xs font-semibold text-primary">
+                  (TODAY)
+                </span>
+              )}
             </span>
-            <BookOpen className="w-3 h-3 text-muted-foreground/40 transition-colors duration-300 group-hover:text-primary/70" />
           </div>
-          <div className="flex items-baseline gap-1">
-            <span className="font-mono text-xs sm:text-sm font-medium text-foreground tabular-nums">
-              {solution.score?.toFixed(2)}
-            </span>
-            <span className="font-mono text-[11px] sm:text-xs text-muted-foreground">{`{${solution.characters}}`}</span>
+          {/* Target image */}
+          <div className="aspect-4/3 overflow-hidden border-y border-border/40">
+            <TargetImage
+              src={getSolutionImageUrl(solution)}
+              colors={solution.colors}
+              alt={solution.name}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.06]"
+            />
           </div>
-        </div>
+          {/* Footer - always show for solved cards */}
+          <div
+            className={`${footerClasses} flex-col items-start gap-0.5 py-1.5`}
+          >
+            <div className="flex items-center justify-between w-full">
+              <span className="font-mono text-[11px] text-muted-foreground transition-colors duration-300 group-hover:text-foreground/80">
+                Your score
+              </span>
+              <BookOpen className="w-3 h-3 text-muted-foreground/40 transition-colors duration-300 group-hover:text-primary/70" />
+            </div>
+            <div className="flex items-baseline gap-1">
+              <span className="font-mono text-xs sm:text-sm font-medium text-foreground tabular-nums">
+                {solution.score?.toFixed(2)}
+              </span>
+              <span className="font-mono text-[11px] sm:text-xs text-muted-foreground">{`{${solution.characters}}`}</span>
+            </div>
+          </div>
         </div>
       </div>
     </Link>
